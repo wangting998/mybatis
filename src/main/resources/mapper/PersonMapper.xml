@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace为命名空间，功能是对sql语句进行分类管理，隔离sql语句-->
+<mapper namespace="PersonTest">
+    <!--Mysql 使用 uuid 实现主键 :注意使用的 order 是“BEFORE”-->
+    <insert id="insertPersonUUID" parameterType="com.bh.pojo.Person">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+            select uuid()
+        </selectKey>
+        insert into person (id,username,sex,address) values
+        (#{id},#{username},#{sex},#{address})
+    </insert>
+</mapper>

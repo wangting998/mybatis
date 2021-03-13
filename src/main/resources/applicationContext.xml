@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd ">
+
+    <!--开启注解-->
+    <context:component-scan base-package="com.bh"/>
+
+    <!--1、加载配置文件，数据库配置-->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <!--2.数据库连接池，id值固定-dataSource，class是连接池类全路径-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close">
+        <!--配置基本信息-->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!--连接池支持的最大连接数,这里取值为210,表示同时最多有10个数据库连接。设 0 为没有限制-->
+        <property name="maxActive" value="10"/>
+    </bean>
+
+    <!--3.整合spring，mybatis框架
+        把SqlSession等对象创建交给spring容器
+        id值固定-sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <!--3.1 mybatis核心配置文件位置-->
+        <property name="configLocation" value="classpath:mybatis-config_spring.xml"/>
+        <!--3.2配置连接池，res指向连接池bean对象的id值-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--3.3 扫描 XxxMapper.xml 映射文件，读取 sql 语句-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+
+    <!--4.定义mapper接口扫描器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--扫描所有XxxMapper接口，把接口实例的创建交给spring容器-->
+        <property name="basePackage" value="com.bh.mapper"/>
+    </bean>
+</beans>

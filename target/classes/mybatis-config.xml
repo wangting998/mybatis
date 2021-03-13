@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--mybatis-config.xml 全局配置文件,就是mybatis的一级缓存-->
+<configuration>
+    <!--加载配置文件，数据库配置-->
+    <properties resource="db.properties"></properties>
+
+    <settings>
+        <!-- 延迟加载的总开关 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 设置为false实现按需求加载  -->
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+    <!--扫描包，配置别名-->
+    <typeAliases>
+        <package name="com.bh.pojo"/>
+    </typeAliases>
+
+    <!--数据库配置环境(之后 spring 框架将取代之)-->
+    <environments default="development">
+        <environment id="development">
+            <!--使用 jdbc 事务管理,开启事物-->
+            <transactionManager type="JDBC"/>
+            <!--数据库连接-->
+            <!--mybaties数据源配置类型（POOLED、JNDI、UNPOOLED）
+                如果将属性设置成POOLED，mybaties会创建一个数据库连接池，连接池的一个连接将会被用作数据库操作。
+                一旦数据库操作完成，mybaties会将此连接返回给连接池。在开发或测试环境中经常用到此方式。
+            -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--mybatis 框架需要加载映射文件，将 UserMapper_.xml 添加至 mybatis-config.xml-->
+    <mappers>
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/UserMapper_.xml"/>
+        <mapper resource="mapper/PersonMapper.xml"/>
+        <mapper resource="mapper/OrdersMapper.xml"/>
+    </mappers>
+</configuration>
+
